@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateMailingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +12,14 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('mailing', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->enum('role', ['admin', 'subscriber']);
-            $table->rememberToken();
+            $table->string('email_theme');
+            $table->text('email_text');
+            $table->timestamp('scheduled_date')->nullable();
+            $table->timestamp('sending_date')->nullable();
+            $table->enum('status', ['sent', 'scheduled', 'draft']);
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('user');
+        Schema::drop('mailing');
     }
 }
