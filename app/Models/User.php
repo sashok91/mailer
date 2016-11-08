@@ -9,6 +9,9 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const USER_ROLE_ADMIN = 'admin';
+    const USER_ROLE_SUBSCRIBER = 'subscriber';
+
     protected $table = 'user';
 
     protected $fillable = [
@@ -23,4 +26,12 @@ class User extends Authenticatable
         'password',
         'remember_token'
     ];
+
+    public function isAdmin(){
+        return $this->role === self::USER_ROLE_ADMIN;
+    }
+
+    public function isSubscriber(){
+        return $this->role === self::USER_ROLE_SUBSCRIBER;
+    }
 }
