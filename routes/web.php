@@ -17,4 +17,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Route::post('subscriber/create', 'SubscriberController@createSubscriber');
+Route::post('/subscriber/create', 'SubscriberController@createSubscriber');
+
+Route::get('/adminpanel/admins', 'AdminsController@showAdminListView');
+Route::get('/adminpanel/showcreateview', 'AdminsController@showAdminCreateView');
+Route::get('/adminpanel/showupdateview/{id}', 'AdminsController@showAdminUpdateView');
+
+Route::post('/admin/create', 'AdminsController@create');
+Route::post('/admin/update', 'AdminsController@update');
+Route::get('/admin/delete/{id}', 'AdminsController@delete');

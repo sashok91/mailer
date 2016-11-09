@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class SubscriberController extends Controller
+class SubscribersController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -35,7 +36,6 @@ class SubscriberController extends Controller
            'middle_name' => 'max:255',
            'last_name' => 'max:255',
            'email' => 'email',
-
        ]);
        return view('pages.subscriptionresult');
     }
