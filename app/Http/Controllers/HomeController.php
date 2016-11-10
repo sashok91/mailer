@@ -25,7 +25,7 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         return $user && $user->isAdmin() ?
-            redirect('/adminpanel/admins') :
+            redirect()->route('admin.index') :
             view('home', [
                 'user' => Auth::user()
             ]);

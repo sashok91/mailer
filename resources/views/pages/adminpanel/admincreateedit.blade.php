@@ -15,16 +15,17 @@
                         @endif
                         <form class="form-horizontal" role="form" method="POST" action="{{ $path }}">
                             {{ csrf_field() }}
-                            @if($user)
-                                <input id="id" type="hidden" name="id" value="{{ $user->id  }}">
+                            @if(isset($user))
+                                {{ method_field('PUT') }}
                             @endif
                             <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
                                 <label for="first_name" class="col-md-4 control-label">First Name</label>
 
                                 <div class="col-md-6">
-                                    @if($user)
+                                    @if(isset($user))
                                         <input id="first_name" type="text" class="form-control" name="first_name"
-                                               value="{{ old('first_name') ? old('first_name') : $user->first_name  }}" required autofocus>
+                                               value="{{ old('first_name') ? old('first_name') : $user->first_name  }}"
+                                               required autofocus>
                                     @else
                                         <input id="first_name" type="text" class="form-control" name="first_name"
                                                value="{{ old('first_name') }}" required autofocus>
@@ -41,12 +42,12 @@
                                 <label for="middle_name" class="col-md-4 control-label">Middle Name</label>
 
                                 <div class="col-md-6">
-                                    @if($user)
+                                    @if(isset($user))
                                         <input id="middle_name" type="text" class="form-control" name="middle_name"
-                                               value="{{ old('middle_name') ? old('middle_name') : $user->middle_name  }}" >
+                                               value="{{ old('middle_name') ? old('middle_name') : $user->middle_name  }}">
                                     @else
                                         <input id="middle_name" type="text" class="form-control" name="middle_name"
-                                               value="{{ old('middle_name') }}" >
+                                               value="{{ old('middle_name') }}">
                                     @endif
                                     @if ($errors->has('middle_name'))
                                         <span class="help-block">
@@ -60,12 +61,12 @@
                                 <label for="last_name" class="col-md-4 control-label">Last Name</label>
 
                                 <div class="col-md-6">
-                                    @if($user)
+                                    @if(isset($user))
                                         <input id="last_name" type="text" class="form-control" name="last_name"
-                                               value="{{ old('last_name') ? old('last_name') : $user->last_name  }}" >
+                                               value="{{ old('last_name') ? old('last_name') : $user->last_name  }}">
                                     @else
                                         <input id="last_name" type="text" class="form-control" name="last_name"
-                                               value="{{ old('last_name') }}" >
+                                               value="{{ old('last_name') }}">
                                     @endif
                                     @if ($errors->has('last_name'))
                                         <span class="help-block">
@@ -79,7 +80,7 @@
                                 <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
                                 <div class="col-md-6">
-                                    @if($user)
+                                    @if(isset($user))
                                         <input id="email" type="text" class="form-control" name="email"
                                                value="{{ $user->email  }}" readonly>
                                     @else
@@ -122,11 +123,19 @@
                                 <div class="col-md-6">
                                     <select id="permissions" class="form-control" name="permissions[]" multiple
                                             required>
-                                        @foreach (\App\Models\Permissions::all() as $permission)
-                                            <option value={{ $permission->id }}  {{old('permissions') && in_array($permission->id,old('permissions'))? 'selected':'' }}>
-                                                {{ $permission->name }}
-                                            </option>
-                                        @endforeach
+                                        @if(isset($user) && !old('permissions'))
+                                            @foreach (\App\Models\Permissions::all() as $permission)
+                                                <option value={{ $permission->id }}  {{$user->permissions && in_array($permission->id, $user->permissions)? 'selected':'' }}>
+                                                    {{ $permission->name }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            @foreach (\App\Models\Permissions::all() as $permission)
+                                                <option value={{ $permission->id }}  {{old('permissions') && in_array($permission->id,old('permissions'))? 'selected':'' }}>
+                                                    {{ $permission->name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                     @if ($errors->has('permissions'))
                                         <span class="help-block">

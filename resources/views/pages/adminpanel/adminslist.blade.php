@@ -8,7 +8,7 @@
                     <div class="panel-heading clearfix">
                         <h4 class="panel-title pull-left">Admins</h4>
                         <div class="btn-group pull-right">
-                            <a href="{{ url('/adminpanel/showcreateview') }}" class="btn btn-default btn-sm">Add New Admin</a>
+                            <a href="{{ url('/admin/create') }}" class="btn btn-default btn-sm">Add New Admin</a>
                         </div>
                     </div>
 
@@ -32,10 +32,18 @@
                                         {{$admin->email}}
                                     </td>
                                     <td>
-                                        <a href="{{ url('/adminpanel/showupdateview/' . $admin->id) }}">Edit</a>
+                                        <a href="{{ url('/admin/' . $admin->id . '/edit') }}">Edit</a>
                                     </td>
                                     <td>
-                                        <a href="{{ url('/admin/delete/' . $admin->id) }}">Delete</a>
+                                        <a href="{{ url('/admin/' . $admin->id) }}"
+                                           onclick="event.preventDefault(); document.getElementById('{{'delete-form' . $admin->id}}').submit();">
+                                            Delete
+                                        </a>
+                                        <form id="{{'delete-form' . $admin->id}}" action="{{ url('/admin/' . $admin->id) }}" method="POST"
+                                              style="display: none;">
+                                            {{ csrf_field() }}
+                                            {{ method_field('DELETE') }}
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
