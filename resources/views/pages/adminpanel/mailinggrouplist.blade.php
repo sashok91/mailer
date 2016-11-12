@@ -8,7 +8,7 @@
                     <div class="panel-heading clearfix">
                         <h4 class="panel-title pull-left">subscribers</h4>
                         <div class="btn-group pull-right">
-                            <a href="{{ url('/subscriber/create') }}" class="btn btn-default btn-sm">Add New Subscriber</a>
+                            <a href="{{ url('/mailinggroup/create') }}" class="btn btn-default btn-sm">Add New Mailing Group</a>
                         </div>
                     </div>
 
@@ -17,29 +17,25 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Email</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($subscribers as $subscriber)
+                            @foreach($mailinggroups as $mailinggroup)
                                 <tr>
                                     <td>
-                                        {{$subscriber->getFullName()}}
+                                        {{$mailinggroup->name()}}
                                     </td>
                                     <td>
-                                        {{$subscriber->email}}
+                                        <a href="{{ url('/mailinggroup/' . $mailinggroup->id . '/edit') }}">Edit</a>
                                     </td>
                                     <td>
-                                        <a href="{{ url('/subscriber/' . $subscriber->id . '/edit') }}">Edit</a>
-                                    </td>
-                                    <td>
-                                        <a href="{{ url('/subscriber/' . $subscriber->id) }}"
-                                           onclick="event.preventDefault(); document.getElementById('{{'delete-form' . $subscriber->id}}').submit();">
+                                        <a href="{{ url('/mailinggroup/' . $mailinggroup->id) }}"
+                                           onclick="event.preventDefault(); document.getElementById('{{'delete-form' . $mailinggroup->id}}').submit();">
                                             Delete
                                         </a>
-                                        <form id="{{'delete-form' . $subscriber->id}}" action="{{ url('/subscriber/' . $subscriber->id) }}" method="POST"
+                                        <form id="{{'delete-form' . $mailinggroup->id}}" action="{{ url('/mailinggroup/' . $mailinggroup->id) }}" method="POST"
                                               style="display: none;">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}

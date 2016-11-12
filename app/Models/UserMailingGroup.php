@@ -16,4 +16,9 @@ class UserMailingGroup extends Model
     public function scopeGetByIdUser($query, $idUser){
         return $query->where('id_user',$idUser);
     }
+
+    public function scopeGetByIdUserAndIdMailingGroup($query, $idUser, $idMailingGroup){
+        return $query->getByIdUser($idUser)
+            ->where('id_mailing_group',$idMailingGroup);
+    }
 }

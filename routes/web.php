@@ -18,3 +18,4 @@ Auth::routes();
 
 Route::resource('admin', 'AdminController');
 Route::resource('subscriber', 'SubscriberController');
+Route::resource('mailinggroup', 'MailingGroupController');

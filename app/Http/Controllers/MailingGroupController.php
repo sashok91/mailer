@@ -2,10 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\MailingGroupRepositoryInterface;
 use Illuminate\Http\Request;
 
 class MailingGroupController extends Controller
 {
+
+    /**
+     * The user repository instance.
+     */
+    protected $mailingGroups;
+
+    /**
+     * AdminController constructor.
+     * @param MailingGroupRepositoryInterface $mailingGroups
+     */
+    public function __construct(MailingGroupRepositoryInterface $mailingGroups)
+    {
+        $this->middleware('auth');
+        $this->middleware('admin');
+        $this->middleware('noPermissionsForMailingGroup');
+        $this->mailingGroups = $mailingGroups;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +32,9 @@ class MailingGroupController extends Controller
      */
     public function index()
     {
-        //
+        return view('pages.adminpanel.mailinggrouplist', [
+            'mailingGroups' => $this->mailingGroups->all()
+        ]);
     }
 
     /**
@@ -79,6 +100,13 @@ class MailingGroupController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $result = $this->mailingGroups->delete($id);
+        if ($result) {
+            return redirect()->route('mailinggroup.index');
+        } else {
+            return redirect()->back()->withErrors([
+                'common' => Lang::get('appmessages.failed_mailinggroup_deleting'),
+            ]);
+        }
     }
 }
