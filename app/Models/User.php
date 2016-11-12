@@ -50,6 +50,21 @@ class User extends Authenticatable
         return $this->role === self::USER_ROLE_SUBSCRIBER;
     }
 
+    public function hasSubscriberPermissions()
+    {
+        return UserPermissions::getByIdUserAndIdPermissions($this->id, Permissions::PERMISSIONS_SUBSCRIBERS_ID)->first() ? true : false;
+    }
+
+    public function hasMailingGroupPermissions()
+    {
+        return UserPermissions::getByIdUserAndIdPermissions($this->id, Permissions::PERMISSIONS_MAILING_GROUPS_ID)->first() ? true : false;
+    }
+
+    public function hasMailingPermissions()
+    {
+        return UserPermissions::getByIdUserAndIdPermissions($this->id, Permissions::PERMISSIONS_MAILINGS_ID)->first() ? true : false;
+    }
+
     public function scopeGetAdminsByRoleStatus($query, $role, $status)
     {
         return $query->where('role', '=', $role)
@@ -68,6 +83,11 @@ class User extends Authenticatable
 
     public function getFullName()
     {
-        return trim($this->first_name) . ' ' .trim($this->middle_name) . ' ' . trim($this->last_name);
+        return trim($this->first_name) . ' ' . trim($this->middle_name) . ' ' . trim($this->last_name);
+    }
+
+    public function scopeGetByEmail($query, $email)
+    {
+        return $query->where('email', $email);
     }
 }

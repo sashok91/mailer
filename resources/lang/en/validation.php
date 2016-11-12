@@ -84,6 +84,7 @@ return [
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
 
+    'unique_email_for_edit'=> 'The :attribute is not unique.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

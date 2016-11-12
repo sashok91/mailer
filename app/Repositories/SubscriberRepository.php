@@ -4,13 +4,13 @@ namespace App\Repositories;
 
 
 use App\Models\User;
-use App\Models\UserPermissions;
+use App\Models\UserMailingGroup;
 
-class AdminRepository implements AdminRepositoryInterface
+class SubscriberRepository implements SubscriberRepositoryInterface
 {
     public function all($columns = array('*'))
     {
-        return User::where('role', User::USER_ROLE_ADMIN)->get($columns);
+        return User::where('role', User::USER_ROLE_SUBSCRIBER)->get($columns);
     }
 
     public function create(array $data)
@@ -21,9 +21,9 @@ class AdminRepository implements AdminRepositoryInterface
             'last_name' => trim($data['last_name']),
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role' => User::USER_ROLE_ADMIN
+            'role' => User::USER_ROLE_SUBSCRIBER
         ]);
-        $this->savePermissions($user->id, $data['permissions']);
+        $this->saveUserMailingGroup($user->id, $data['mailing_groups']);
         return $user;
     }
 
@@ -35,24 +35,23 @@ class AdminRepository implements AdminRepositoryInterface
             $user->fill([
                 'first_name' => trim($data['first_name']),
                 'middle_name' => trim($data['middle_name']),
+                'email' => $data['email'],
                 'last_name' => trim($data['last_name']),
                 'password' => bcrypt($data['password'])
             ]);
             $result = $user->save();
-            UserPermissions::getByIdUser($id)->delete();
-            $this->savePermissions($id, $data['permissions']);
+            UserMailingGroup::getByIdUser($id)->delete();
+            $this->saveUserMailingGroup($id, $data['mailing_groups']);
         }
         return $result;
     }
 
-    private function savePermissions($userId, array $permissionsIds){
-        if ($userId && count($permissionsIds)){
-            foreach($permissionsIds as $permissionId){
-                UserPermissions::firstOrCreate([
-                    'id_user' => $userId,
-                    'id_permissions' => $permissionId
-                ]);
-            }
+    private function saveUserMailingGroup($idUser, array $mailingGroupsIds){
+        foreach($mailingGroupsIds as $mailingGroupsId){
+            UserMailingGroup::firstOrCreate([
+                'id_user' => $idUser,
+                'id_mailing_group' => $mailingGroupsId
+            ]);
         }
     }
 
@@ -68,18 +67,18 @@ class AdminRepository implements AdminRepositoryInterface
 
     public function find($id, $columns = array('*'))
     {
-        return User::where('role', User::USER_ROLE_ADMIN)->find($id, $columns);
+        return User::where('role', User::USER_ROLE_SUBSCRIBER)->find($id, $columns);
     }
 
-    public function getAdminWithPermissionsIdArray($idAdmin){
-        $user = $this->find($idAdmin);
+    public function getSubscriberWithMailingGroupsIdArray($id){
+        $user = $this->find($id);
         if ($user){
             $arrayOfIds = [];
-            $userPermissions = UserPermissions::getByIdUser($idAdmin)->get(['id_permissions']);
-            foreach($userPermissions as $userPermission){
-                $arrayOfIds[] = $userPermission->id_permissions;
+            $mailingGroups = UserMailingGroup::getByIdUser($id)->get(['id_mailing_group']);
+            foreach($mailingGroups as $mailingGroup){
+                $arrayOfIds[] = $mailingGroup->id_mailing_group;
             }
-            $user->permissions = $arrayOfIds;
+            $user->mailing_groups = $arrayOfIds;
         }
         return $user;
     }

@@ -53,6 +53,9 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'admin' => RedirectIfNotAdmin::class
+        'admin' => RedirectIfNotAdmin::class,
+        'noPermissionsForSubscriber' => \App\Http\Middleware\NoPermissionsForSubscriber::class,
+        'noPermissionsForMailingGroup' => \App\Http\Middleware\NoPermissionsForMailingGroup::class,
+        'noPermissionsForMailing' => \App\Http\Middleware\NoPermissionsForMailing::class,
     ];
 }

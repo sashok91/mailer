@@ -17,3 +17,4 @@ Route::get('/home', 'HomeController@index');
 Auth::routes();
 
 Route::resource('admin', 'AdminController');
+Route::resource('subscriber', 'SubscriberController');

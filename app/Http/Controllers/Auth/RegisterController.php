@@ -72,8 +72,7 @@ class RegisterController extends Controller
             'last_name' => trim($data['last_name']),
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role' => User::USER_ROLE_SUBSCRIBER,
-            'status' => User::USER_STATUS_ACTIVE
+            'role' => User::USER_ROLE_SUBSCRIBER
         ]);
         foreach($data['mailing_groups'] as $mailingGroupsId){
             UserMailingGroup::firstOrCreate([
