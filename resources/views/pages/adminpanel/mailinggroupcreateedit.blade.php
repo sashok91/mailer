@@ -7,6 +7,12 @@
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
                         <h4 class="panel-title pull-left">Subscriber</h4>
+                        @if(isset($mailingGroup))
+                            <div class="btn-group pull-right">
+                                <a href="{{ url('/mailinggroup/' . $mailingGroup->id . '/subscriber') }}"
+                                   class="btn btn-default btn-sm">Add Subscribers</a>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="panel-body">
@@ -38,33 +44,6 @@
                                     @endif
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="mailing-groups" class="col-md-4 control-label">Mailing Groups</label>
-                                <div class="col-md-6">
-                                    <select id="mailing-groups" class="form-control" name="mailing_groups[]" multiple required>
-                                        @if(isset($user) && !old('mailing_groups'))
-                                            @foreach (\App\Models\MailingGroup::all() as $mailingGroup)
-                                                <option value="{{ $mailingGroup->id }}" {{$user->mailing_groups && in_array($mailingGroup->id, $user->mailing_groups)? 'selected':'' }}>
-                                                    {{ $mailingGroup->name }}
-                                                </option>
-                                            @endforeach
-                                        @else
-                                            @foreach (\App\Models\MailingGroup::all() as $mailingGroup)
-                                                <option value="{{ $mailingGroup->id }}" {{old('mailing_groups') && in_array($mailingGroup->id,old('mailing_groups'))? 'selected':'' }}>
-                                                    {{ $mailingGroup->name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    @if ($errors->has('mailing_groups'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('mailing_groups') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button type="submit" class="btn btn-primary">
@@ -73,6 +52,42 @@
                                 </div>
                             </div>
                         </form>
+                        @if(isset($mailingGroup))
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($mailingGroup->subscribers as $subscriber)
+                                    <tr>
+                                        <td>
+                                            {{$subscriber->getFullName()}}
+                                        </td>
+                                        <td>
+                                            {{$subscriber->email}}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('/mailinggroup/' . $mailingGroup->id . '/subscriber/' . $subscriber->id) }}"
+                                               onclick="event.preventDefault(); document.getElementById('{{'delete-form' . $subscriber->id}}').submit();">
+                                                Delete
+                                            </a>
+                                            <form id="{{'delete-form' . $mailingGroup->id}}"
+                                                  action="{{ url('/mailinggroup/' . $mailingGroup->id . '/subscriber/' . $subscriber->id) }}"
+                                                  method="POST"
+                                                  style="display: none;">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
                 </div>
             </div>

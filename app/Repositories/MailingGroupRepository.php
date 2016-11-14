@@ -50,7 +50,7 @@ class MailingGroupRepository implements MailingGroupRepositoryInterface
         return MailingGroup::find($id, $columns);
     }
 
-    public function addUserToMailingGroup($idUser, $idMailingGroup)
+    public function addUserToMailingGroup($idMailingGroup, $idUser )
     {
         $result = false;
         $user = User::find($idUser);
@@ -65,8 +65,18 @@ class MailingGroupRepository implements MailingGroupRepositoryInterface
         return $result;
     }
 
-    public function deleteUserFromMailingGroup($idUser, $idMailingGroup)
+    public function deleteUserFromMailingGroup($idMailingGroup, $idUser)
     {
         return UserMailingGroup::getByIdUserAndIdMailingGroup($idUser, $idMailingGroup)->delete();
+    }
+
+    public function getMailingGroupsWithSubscribers($id)
+    {
+        $mailingGroup = $this->find($id);
+        if ($mailingGroup){
+            $subscribers = User::getByMailingGroupId($id)->get();
+            $mailingGroup->subscribers = $subscribers ? $subscribers : [];
+        }
+        return $mailingGroup;
     }
 }

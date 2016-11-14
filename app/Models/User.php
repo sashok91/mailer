@@ -90,4 +90,9 @@ class User extends Authenticatable
     {
         return $query->where('email', $email);
     }
+
+    public function scopeGetByMailingGroupId($query, $id){
+        return $query->leftJoin('user_mailing_group', 'user.id', '=',  'user_mailing_group.id_user')
+            ->where('user_mailing_group.id_mailing_group', $id);
+    }
 }

@@ -19,3 +19,6 @@ Auth::routes();
 Route::resource('admin', 'AdminController');
 Route::resource('subscriber', 'SubscriberController');
 Route::resource('mailinggroup', 'MailingGroupController');
+Route::get('/mailinggroup/{mailinggroup}/subscriber', 'MailingGroupController@indexSubscriber');
+Route::delete('/mailinggroup/{mailinggroup}/subscriber/{subscriber}', 'MailingGroupController@deleteSubscriber');
+Route::post('/mailinggroup/{mailinggroup}/subscriber/{subscriber}', 'MailingGroupController@addSubscriber');
