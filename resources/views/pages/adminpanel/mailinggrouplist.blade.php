@@ -10,6 +10,9 @@
                         <div class="btn-group pull-right">
                             <a href="{{ url('/mailinggroup/create') }}" class="btn btn-default btn-sm">Add New Mailing Group</a>
                         </div>
+                        <div class="btn-group pull-right">
+                            <a href="{{ url('/mailinggroup/subscribers/showimport') }}" class="btn btn-default btn-sm">Add Subscribers from CSV</a>
+                        </div>
                     </div>
 
                     <div class="panel-body">

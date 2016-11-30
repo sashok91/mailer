@@ -22,3 +22,6 @@ Route::resource('mailinggroup', 'MailingGroupController');
 Route::get('/mailinggroup/{mailinggroup}/subscriber', 'MailingGroupController@indexSubscriber');
 Route::delete('/mailinggroup/{mailinggroup}/subscriber/{subscriber}', 'MailingGroupController@deleteSubscriber');
 Route::post('/mailinggroup/{mailinggroup}/subscriber/{subscriber}', 'MailingGroupController@addSubscriber');
+
+Route::get('mailinggroup/subscribers/showimport', 'ImportSubscribersFromCSVController@showImportView');
+Route::post('mailinggroup/subscribers/import', 'ImportSubscribersFromCSVController@import');

@@ -10,7 +10,7 @@ class SubscriberRepository implements SubscriberRepositoryInterface
 {
     public function all($columns = array('*'))
     {
-        return User::where('role', User::USER_ROLE_SUBSCRIBER)->get($columns);
+        return User::getSubscribers()->get($columns);
     }
 
     public function create(array $data)
@@ -46,7 +46,7 @@ class SubscriberRepository implements SubscriberRepositoryInterface
         return $result;
     }
 
-    private function saveUserMailingGroup($idUser, array $mailingGroupsIds){
+    public function saveUserMailingGroup($idUser, array $mailingGroupsIds){
         foreach($mailingGroupsIds as $mailingGroupsId){
             UserMailingGroup::firstOrCreate([
                 'id_user' => $idUser,
@@ -67,7 +67,7 @@ class SubscriberRepository implements SubscriberRepositoryInterface
 
     public function find($id, $columns = array('*'))
     {
-        return User::where('role', User::USER_ROLE_SUBSCRIBER)->find($id, $columns);
+        return User::getSubscribers()->find($id, $columns);
     }
 
     public function getSubscriberWithMailingGroupsIdArray($id){
@@ -81,6 +81,10 @@ class SubscriberRepository implements SubscriberRepositoryInterface
             $user->mailing_groups = $arrayOfIds;
         }
         return $user;
+    }
+
+    public function findByEmail($email){
+        return User::getByEmail($email)->first();
     }
 
 }

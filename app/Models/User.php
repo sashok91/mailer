@@ -95,4 +95,8 @@ class User extends Authenticatable
         return $query->leftJoin('user_mailing_group', 'user.id', '=',  'user_mailing_group.id_user')
             ->where('user_mailing_group.id_mailing_group', $id);
     }
+
+    public function scopeGetSubscribers($query){
+        return $query->where('role', User::USER_ROLE_SUBSCRIBER);
+    }
 }

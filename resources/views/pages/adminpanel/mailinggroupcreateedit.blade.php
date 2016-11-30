@@ -6,7 +6,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
-                        <h4 class="panel-title pull-left">Subscriber</h4>
+                        <h4 class="panel-title pull-left">Mailing Group</h4>
                         @if(isset($mailingGroup))
                             <div class="btn-group pull-right">
                                 <a href="{{ url('/mailinggroup/' . $mailingGroup->id . '/subscriber') }}"
