@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ImportSubscribersFromCSVRequest;
 use App\Repositories\MailingGroupRepositoryInterface;
 use App\Services\ImportSubscribersFromCSVService;
+use Illuminate\Support\Facades\Lang;
 
 class ImportSubscribersFromCSVController extends Controller
 {
@@ -28,7 +29,7 @@ class ImportSubscribersFromCSVController extends Controller
                 'mailingGroups' => $this->mailingGroups->all()
             ]);
         } else {
-            return back()->with('error','Please Check your file. Something is wrong there.');
+            return back()->with('error', Lang::get('failed_import_csv_subscribers'));
         }
     }
 

@@ -5,9 +5,36 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Models\UserMailingGroup;
+use Illuminate\Support\Facades\Validator;
 
 class SubscriberRepository implements SubscriberRepositoryInterface
 {
+    protected $userModel;
+
+    public function __construct(User $userModel)
+    {
+        $this->userModel = $userModel;
+    }
+
+    protected $rulesForCreate = [
+        'first_name' => 'required|max:255',
+        'middle_name' => 'max:255',
+        'last_name' => 'max:255',
+        'email' => 'required|email|max:255',
+        'password' => 'required',
+        'mailing_groups' => 'required|array',
+        'role' => 'in:' . User::USER_ROLE_SUBSCRIBER
+    ];
+
+    protected $rulesForUpdate = [
+        'first_name' => 'max:255',
+        'middle_name' => 'max:255',
+        'last_name' => 'max:255',
+        'email' => 'email|max:255',
+        'mailing_groups' => 'array',
+        'role' => 'in:' . User::USER_ROLE_SUBSCRIBER
+    ];
+
     public function all($columns = array('*'))
     {
         return User::getSubscribers()->get($columns);
@@ -15,15 +42,19 @@ class SubscriberRepository implements SubscriberRepositoryInterface
 
     public function create(array $data)
     {
-        $user = User::create([
-            'first_name' => trim($data['first_name']),
-            'middle_name' => trim($data['middle_name']),
-            'last_name' => trim($data['last_name']),
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'role' => User::USER_ROLE_SUBSCRIBER
-        ]);
-        $this->saveUserMailingGroup($user->id, $data['mailing_groups']);
+        $user = null;
+        if ($this->isValidForCreate($data)){
+            $dataForSave = [
+                'first_name' => trim($data['first_name']),
+                'middle_name' => trim($data['middle_name']),
+                'last_name' => trim($data['last_name']),
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+                'role' => User::USER_ROLE_SUBSCRIBER
+            ];
+            $user = User::create($dataForSave);
+            $this->saveUserMailingGroup($user->id, $data['mailing_groups']);
+        }
         return $user;
     }
 
@@ -31,14 +62,20 @@ class SubscriberRepository implements SubscriberRepositoryInterface
     {
         $result = false;
         $user = $this->find($id);
-        if ($user) {
-            $user->fill([
-                'first_name' => trim($data['first_name']),
-                'middle_name' => trim($data['middle_name']),
-                'email' => $data['email'],
-                'last_name' => trim($data['last_name']),
-                'password' => bcrypt($data['password'])
-            ]);
+        if ($user && $this->isValidForUpdate($data)) {
+            $dataForSave = [];
+            $fillableAttr = $user->getFillable();
+            foreach ($fillableAttr as $key => $attrName) {
+                if (array_key_exists($attrName, $data)){
+                    if ($attrName === 'password'){
+                        $value = bcrypt($data[$attrName]);
+                    } else {
+                        $value = trim($data[$attrName]);
+                    }
+                    $dataForSave[$attrName] = $value;
+                }
+            }
+            $user->fill($dataForSave);
             $result = $user->save();
             UserMailingGroup::getByIdUser($id)->delete();
             $this->saveUserMailingGroup($id, $data['mailing_groups']);
@@ -87,4 +124,20 @@ class SubscriberRepository implements SubscriberRepositoryInterface
         return User::getByEmail($email)->first();
     }
 
+    public function isValidForCreate($data){
+        return $this->isValid($data, $this->rulesForCreate);
+    }
+
+    public function isValidForUpdate($data){
+        return $this->isValid($data, $this->rulesForUpdate);
+    }
+
+    private function isValid($data, $rules){
+        $result = false;
+        $validator = Validator::make($data, $rules);
+        if (!$validator->fails()){
+            $result = true;
+        }
+        return $result;
+    }
 }
