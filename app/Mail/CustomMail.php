@@ -31,8 +31,9 @@ class CustomMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.custommail', [
-            'text' => $this->mailing->email_text
-        ]);
+        return $this->from('robot@mailing.com')
+            ->view('mails.custommails', [
+                'text' => $this->mailing->email_text
+            ]);
     }
 }

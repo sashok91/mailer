@@ -14,7 +14,11 @@
                             <a href="{{ url('/mailing') }}" class="btn btn-default btn-sm">Show Drafts</a>
                         </div>
                     </div>
-
+                    @if (isset($status))
+                        <div class="alert alert-success">
+                            {{ $status }}
+                        </div>
+                    @endif
                     <div class="panel-body">
                         <table class="table table-striped">
                             <thead>

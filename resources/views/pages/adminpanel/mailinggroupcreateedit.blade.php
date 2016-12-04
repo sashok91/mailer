@@ -75,7 +75,7 @@
                                                onclick="event.preventDefault(); document.getElementById('{{'delete-form' . $subscriber->id}}').submit();">
                                                 Delete
                                             </a>
-                                            <form id="{{'delete-form' . $mailingGroup->id}}"
+                                            <form id="{{'delete-form' . $subscriber->id}}"
                                                   action="{{ url('/mailinggroup/' . $mailingGroup->id . '/subscriber/' . $subscriber->id) }}"
                                                   method="POST"
                                                   style="display: none;">

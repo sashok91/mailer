@@ -68,4 +68,15 @@ class MailingRepository implements MailingRepositoryInterface
     {
         return $this->mailings->where('status', Mailing::STATUS_DRAFT)->get();
     }
+
+    public function changeStatus($mailing, $status, $sendingDate = null)
+    {
+        $dataForSave = [
+            'status' => $status,
+        ];
+        if ($sendingDate){
+            $dataForSave['sending_date'] = $sendingDate;
+        }
+        return $mailing->update($dataForSave);
+    }
 }

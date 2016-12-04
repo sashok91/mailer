@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMailingRequest;
 use App\Repositories\MailingRepositoryInterface;
+use App\Services\MailService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Lang;
 
 class MailingController extends Controller
 {
 
     protected $mailings;
+    protected $mailService;
 
-    public function __construct(MailingRepositoryInterface $mailings)
+    public function __construct(MailingRepositoryInterface $mailings, MailService $mailService)
     {
         $this->middleware('auth');
         $this->middleware('admin');
         $this->middleware('noPermissionsForMailing');
         $this->mailings = $mailings;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -128,7 +131,11 @@ class MailingController extends Controller
         }
     }
 
-    public function send(){
-
+    public function send($id){
+        $mailing = $this->mailings->find($id);
+        $this->mailService->sendMails($mailing);
+        return redirect()->route('mailing.index')->with([
+                'status' => Lang::get('appmessages.mailing_sending_status')
+            ]);
     }
 }
