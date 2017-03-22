@@ -93,7 +93,9 @@
                             <div class="col-md-6">
                                 <select id="mailing-groups" class="form-control" name="mailing_groups[]" multiple required>
                                     @foreach (\App\Models\MailingGroup::all() as $mailingGroup)
-                                        <option value={{ $mailingGroup->id }}>{{ $mailingGroup->name }}</option>
+                                        <option value="{{ $mailingGroup->id }}" {{old('mailing_groups') && in_array($mailingGroup->id,old('mailing_groups'))? 'selected':'' }}>
+                                            {{ $mailingGroup->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('mailing_groups'))

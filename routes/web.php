@@ -12,9 +12,20 @@
 */
 
 Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::resource('admin', 'AdminController');
+Route::resource('subscriber', 'SubscriberController');
+Route::resource('mailinggroup', 'MailingGroupController');
+Route::get('/mailinggroup/{mailinggroup}/subscriber', 'MailingGroupController@indexSubscriber');
+Route::delete('/mailinggroup/{mailinggroup}/subscriber/{subscriber}', 'MailingGroupController@deleteSubscriber');
+Route::post('/mailinggroup/{mailinggroup}/subscriber/{subscriber}', 'MailingGroupController@addSubscriber');
 
-Route::post('subscriber/create', 'SubscriberController@createSubscriber');
+Route::get('mailinggroup/subscribers/showimport', 'ImportSubscribersFromCSVController@showImportView');
+Route::post('mailinggroup/subscribers/import', 'ImportSubscribersFromCSVController@import');
+
+Route::resource('mailing', 'MailingController');
+Route::get('/mailing/{mailing}/send', 'MailingController@send');
+

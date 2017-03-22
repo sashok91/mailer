@@ -12,4 +12,13 @@ class UserPermissions extends Model
         'id_user',
         'id_permissions'
     ];
+
+    public function scopeGetByIdUser($query, $idUser){
+        return $query->where('id_user',$idUser);
+    }
+
+    public function scopeGetByIdUserAndIdPermissions($query, $idUser, $idPermissions){
+        return $query->where('id_user',$idUser)
+            ->where('id_permissions',$idPermissions);
+    }
 }

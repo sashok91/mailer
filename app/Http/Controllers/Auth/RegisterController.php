@@ -67,11 +67,12 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $user = User::create([
-            'first_name' => $data['first_name'],
-            'middle_name' => $data['middle_name'],
-            'last_name' => $data['last_name'],
+            'first_name' => trim($data['first_name']),
+            'middle_name' => trim($data['middle_name']),
+            'last_name' => trim($data['last_name']),
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'role' => User::USER_ROLE_SUBSCRIBER
         ]);
         foreach($data['mailing_groups'] as $mailingGroupsId){
             UserMailingGroup::firstOrCreate([
