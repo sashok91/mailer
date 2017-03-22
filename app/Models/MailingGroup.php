@@ -11,4 +11,9 @@ class MailingGroup extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany('App\Models\User', 'user_mailing_group', 'id_mailing_group', 'id_user');
+    }
 }

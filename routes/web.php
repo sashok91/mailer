@@ -25,3 +25,7 @@ Route::post('/mailinggroup/{mailinggroup}/subscriber/{subscriber}', 'MailingGrou
 
 Route::get('mailinggroup/subscribers/showimport', 'ImportSubscribersFromCSVController@showImportView');
 Route::post('mailinggroup/subscribers/import', 'ImportSubscribersFromCSVController@import');
+
+Route::resource('mailing', 'MailingController');
+Route::get('/mailing/{mailing}/send', 'MailingController@send');
+

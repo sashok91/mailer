@@ -92,7 +92,11 @@ class User extends Authenticatable
     }
 
     public function scopeGetByMailingGroupId($query, $id){
-        return $query->leftJoin('user_mailing_group', 'user.id', '=',  'user_mailing_group.id_user')
+        return $query->join('user_mailing_group', 'user.id', '=',  'user_mailing_group.id_user')
+            ->select(
+                '*',
+                'user.id as id'
+            )
             ->where('user_mailing_group.id_mailing_group', $id);
     }
 
